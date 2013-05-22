@@ -3,9 +3,9 @@ module Spree
     preference :zipcode, :string
     preference :token, :string
     preference :password, :string
-    preference :declared_value, :boolean, default: false
-    preference :receipt_notification, :boolean, default: false
-    preference :receive_in_hands, :boolean, default: false
+    preference :declared_value, :boolean, :default => false
+    preference :receipt_notification, :boolean, :default => false
+    preference :receive_in_hands, :boolean, :default => false
     preference :fallback_amount, :string
     preference :fallback_timing, :string
     preference :default_box_price, :string
@@ -27,7 +27,7 @@ module Spree
       begin
          webservice = calculator.calculate(shipping_method)
       rescue
-        webservice = OpenStruct.new(valor: prefers?(:fallback_amount).to_f, prazo_entrega: prefers?(:fallback_timing))
+        webservice = OpenStruct.new(:valor => prefers?(:fallback_amount).to_f, :prazo_entrega => prefers?(:fallback_timing))
       end
 
       @delivery_time = webservice.prazo_entrega
@@ -49,7 +49,7 @@ module Spree
           depth  = item.product.depth.to_f
           width  = item.product.width.to_f
           height = item.product.height.to_f
-          package_item = ::Correios::Frete::PacoteItem.new(peso: weight, comprimento: depth, largura: width, altura: height)
+          package_item = ::Correios::Frete::PacoteItem.new(:peso => weight, :comprimento => depth, :largura => width, :altura => height)
           package.add_item(package_item)
         end
       end

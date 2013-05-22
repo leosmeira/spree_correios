@@ -26,11 +26,11 @@ describe Spree::Calculator::ESEDEX do
     end
 
     it "should raise error if there is no contracto on #compute" do
-      product = double(weight: 1, depth: 20, width: 15, height: 5)
-      items   = [double(product: product)]
-      order   = double("Order", line_items: items,
-                      amount: BigDecimal("2000,00"),
-                      ship_address: stub(zipcode: "72151613"))
+      product = double(:weight => 1, :depth => 20, :width => 15, :height => 5)
+      items   = [double(:product => product)]
+      order   = double("Order", :line_items => items,
+                      :amount => BigDecimal("2000,00"),
+                      :ship_address => stub(:zipcode => "72151613"))
       order.stub(:is_a?).with(Spree::Order).and_return(true)
 
       expect { @esedex.compute(order) }.to raise_error

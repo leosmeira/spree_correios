@@ -5,7 +5,7 @@ module SpreeCorreios
     config.autoload_paths += %W(#{config.root}/lib)
 
     initializer "spree.register.correios_calculator",
-      after: "spree.register.calculators" do |app|
+      :after => "spree.register.calculators" do |app|
       app.config.spree.calculators
         .shipping_methods += [Spree::Calculator::PAC,
                               Spree::Calculator::SEDEX,

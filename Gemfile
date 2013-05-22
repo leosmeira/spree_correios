@@ -3,7 +3,7 @@ source 'http://rubygems.org'
 group :test do
   gem 'ffaker'
   gem 'rspec'
-  gem 'simplecov', require: false
+  gem 'simplecov', :require => false
   gem 'guard-rspec'
   gem 'growl'
   gem 'fakeweb'

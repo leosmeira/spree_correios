@@ -46,10 +46,10 @@ shared_examples_for "correios calculator" do
     end
 
     before do
-      items = [double(product: double(weight: 1, depth: 20, width: 15, height: 5))]
-      @order = double("Order", line_items: items,
-                      amount: BigDecimal("2000,00"),
-                      ship_address: stub(zipcode: "72151613"))
+      items = [double(:product => double(:weight => 1, :depth => 20, :width => 15, :height => 5))]
+      @order = double("Order", :line_items => items,
+                      :amount => BigDecimal("2000,00"),
+                      :ship_address => stub(:zipcode => "72151613"))
       @order.stub(:is_a?).with(Spree::Order).and_return(true)
 
       @calculator.preferred_zipcode = "71939360"
