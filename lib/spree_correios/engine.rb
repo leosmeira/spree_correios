@@ -6,8 +6,8 @@ module SpreeCorreios
 
     initializer "spree.register.correios_calculator",
       :after => "spree.register.calculators" do |app|
-      app.config.spree.calculators
-        .shipping_methods += [Spree::Calculator::PAC,
+      app.config.spree.calculators.shipping_methods += [
+                              Spree::Calculator::PAC,
                               Spree::Calculator::SEDEX,
                               Spree::Calculator::SEDEX10,
                               Spree::Calculator::ESEDEX,
