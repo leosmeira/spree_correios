@@ -10,7 +10,7 @@ module Spree
     preference :fallback_timing, :string
     preference :default_box_price, :string
 
-    attr_reader :delivery_time
+    attr_accessor :delivery_time
     attr_accessible :preferred_zipcode, :preferred_token,
                     :preferred_password, :preferred_declared_value,
                     :preferred_receipt_notification, :preferred_receive_in_hands, 
@@ -34,8 +34,13 @@ module Spree
       webservice.valor +  prefers?(:default_box_price).to_f
     end
 
+    def delivery_time
+      @delivery_time || prefers?(:fallback_timing)
+    end
+
     def available?(order)
-      !compute(order).zero?
+      #!compute(order).zero? #requisição repetida ao Webservice dos Correios quando order.rate_hash é chamado (available_shipping_methods & cost = calculator.compute) 
+      true
     end
 
     def has_contract?
@@ -49,8 +54,12 @@ module Spree
           depth  = item.product.depth.to_f
           width  = item.product.width.to_f
           height = item.product.height.to_f
-          package_item = ::Correios::Frete::PacoteItem.new(:peso => weight, :comprimento => depth, :largura => width, :altura => height)
-          package.add_item(package_item)
+          
+          item.quantity.times do |n|
+            package_item = ::Correios::Frete::PacoteItem.new(:peso => weight, :comprimento => depth, :largura => width, :altura => height)
+            package.add_item(package_item)
+          end
+          
         end
       end
     end
