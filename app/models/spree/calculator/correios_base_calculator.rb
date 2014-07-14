@@ -1,5 +1,5 @@
 module Spree
-  class Calculator::CorreiosBaseCalculator < Calculator
+  class Calculator::CorreiosBaseCalculator < Spree::ShippingCalculator
     preference :zipcode, :string
     preference :token, :string
     preference :password, :string
@@ -11,22 +11,24 @@ module Spree
     preference :default_box_price, :string
 
     attr_accessor :delivery_time
-    attr_accessible :preferred_zipcode, :preferred_token,
-                    :preferred_password, :preferred_declared_value,
-                    :preferred_receipt_notification, :preferred_receive_in_hands, 
-                    :preferred_fallback_amount, :preferred_default_box_price,
-                    :preferred_fallback_timing
+    # attr_accessible :preferred_zipcode, :preferred_token,
+    #                 :preferred_password, :preferred_declared_value,
+    #                 :preferred_receipt_notification, :preferred_receive_in_hands, 
+    #                 :preferred_fallback_amount, :preferred_default_box_price,
+    #                 :preferred_fallback_timing
 
-    def compute(object)
-      return unless object.present? and object.line_items.present?
+    def compute_package(object)
+      return unless object.present?
 
       order      = object.is_a?(Spree::Order) ? object : object.order
       package    = package_from_order(order)
       calculator = calculator_for_package_of_order(package, order)
       
       begin
-         webservice = calculator.calculate(shipping_method)
-      rescue
+        webservice = calculator.calculate(shipping_method)
+      end
+
+      if webservice.nil? || webservice.valor.to_i == 0
         webservice = OpenStruct.new(:valor => prefers?(:fallback_amount).to_f, :prazo_entrega => prefers?(:fallback_timing))
       end
 
@@ -39,8 +41,7 @@ module Spree
     end
 
     def available?(order)
-      #!compute(order).zero? #requisição repetida ao Webservice dos Correios quando order.rate_hash é chamado (available_shipping_methods & cost = calculator.compute) 
-      true
+      !compute(order).zero? #requisição repetida ao Webservice dos Correios quando order.rate_hash é chamado (available_shipping_methods & cost = calculator.compute) 
     end
 
     def has_contract?
