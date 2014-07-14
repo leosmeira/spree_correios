@@ -1,5 +1,7 @@
 module SpreeCorreios
   class Engine < Rails::Engine
+    require 'spree/core'
+    isolate_namespace Spree
     engine_name 'spree_correios'
 
     config.autoload_paths += %W(#{config.root}/lib)
@@ -13,6 +15,10 @@ module SpreeCorreios
                               Spree::Calculator::ESEDEX,
                               Spree::Calculator::Bogus]
     end
+
+    # initializer "spree.register.correios_calculator", after: "spree.register.calculators" do |app|
+    #   app.config.spree.calculators.shipping_methods += [Spree::Calculator::SEDEX, Spree::Calculator::PAC, Spree::Calculator::SEDEX10]
+    # end
 
     # use rspec for tests
     config.generators do |g|
