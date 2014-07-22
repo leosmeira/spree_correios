@@ -39,8 +39,7 @@ module Spree
     end
 
     def available?(order)
-      #!compute(order).zero? #requisição repetida ao Webservice dos Correios quando order.rate_hash é chamado (available_shipping_methods & cost = calculator.compute) 
-      true
+      !compute(order).zero?
     end
 
     def has_contract?
