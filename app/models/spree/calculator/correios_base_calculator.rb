@@ -30,8 +30,9 @@ module Spree
         webservice = OpenStruct.new(:valor => prefers?(:fallback_amount).to_f, :prazo_entrega => prefers?(:fallback_timing))
       end
 
-      @delivery_time = webservice.prazo_entrega
-      webservice.valor +  prefers?(:default_box_price).to_f
+      @delivery_time = webservice.prazo_entrega == 0 ? prefers?(:fallback_timing).to_i : webservice.prazo_entrega
+      cost = webservice.valor == 0 ? prefers?(:fallback_amount).to_f : webservice.valor
+      cost + prefers?(:default_box_price).to_f
     end
 
     def delivery_time
